@@ -3,22 +3,169 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
+  --background: #fafafa;
   --foreground: #171717;
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --border: #e5e5e5;
+  --muted: #737373;
+  --card: #ffffff;
 }
 
+/* 다크모드 - 시스템 설정 또는 수동 설정 */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --background: #0a0a0a;
     --foreground: #ededed;
+    --primary: #3b82f6;
+    --primary-hover: #60a5fa;
+    --border: #262626;
+    --muted: #a3a3a3;
+    --card: #171717;
   }
+}
+
+/* 수동 다크모드 */
+:root[data-theme="dark"] {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  --primary: #3b82f6;
+  --primary-hover: #60a5fa;
+  --border: #262626;
+  --muted: #a3a3a3;
+  --card: #171717;
+}
+
+/* 수동 라이트모드 */
+:root[data-theme="light"] {
+  --background: #fafafa;
+  --foreground: #171717;
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --border: #e5e5e5;
+  --muted: #737373;
+  --card: #ffffff;
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
+
+@layer components {
+  .btn {
+    @apply px-4 py-3 rounded-lg font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-primary {
+    @apply btn bg-[var(--primary)] text-white hover:bg-[var(--primary-hover)] hover:scale-[1.02] active:scale-[0.98];
+  }
+
+  .btn-secondary {
+    @apply btn bg-transparent border border-[var(--border)] hover:bg-[var(--border)] hover:scale-[1.02] active:scale-[0.98];
+  }
+
+  .input {
+    @apply w-full px-4 py-3 rounded-lg border border-[var(--border)] bg-[var(--card)] 
+           focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent
+           placeholder:text-[var(--muted)] transition-all duration-200;
+  }
+
+  .textarea {
+    @apply input resize-none min-h-[100px];
+  }
+
+  .label {
+    @apply block text-sm font-medium mb-2 text-[var(--foreground)];
+  }
+
+  .card {
+    @apply bg-[var(--card)] rounded-xl p-4 border border-[var(--border)] transition-all duration-200;
+  }
+
+  .card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
+
+  .radio-option {
+    @apply flex items-center gap-3 p-4 rounded-lg border border-[var(--border)] cursor-pointer
+           hover:border-[var(--primary)] transition-all duration-200;
+  }
+
+  .radio-option.selected {
+    @apply border-[var(--primary)];
+    background-color: color-mix(in srgb, var(--primary) 10%, transparent);
+  }
+
+  .checkbox-option {
+    @apply flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all duration-200;
+  }
+
+  .checkbox-option:hover {
+    background-color: color-mix(in srgb, var(--border) 30%, transparent);
+  }
+
+  .progress-bar {
+    @apply h-1 bg-[var(--border)] rounded-full overflow-hidden;
+  }
+
+  .progress-fill {
+    @apply h-full bg-[var(--primary)] transition-all duration-300 ease-out;
+  }
+}
+
+/* 애니메이션 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+.animate-slideIn {
+  animation: slideIn 0.3s ease-out forwards;
+}
+
+.animate-pulse-soft {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* 스태거드 애니메이션 */
+.stagger-1 { animation-delay: 0.05s; }
+.stagger-2 { animation-delay: 0.1s; }
+.stagger-3 { animation-delay: 0.15s; }
+.stagger-4 { animation-delay: 0.2s; }
+.stagger-5 { animation-delay: 0.25s; }
 
 @layer utilities {
   .text-balance {
