@@ -10,6 +10,7 @@ import { useDailyPlan } from '@/hooks/useDailyPlan';
 import { usePlanTimer, NOTIFY_TIMING_OPTIONS, type TimerSettings } from '@/hooks/usePlanTimer';
 import { generateTimeBlocks, CONDITION_OPTIONS, MENSTRUAL_OPTIONS } from '@/lib/templates';
 import { autoAssignTodosToBlocks, suggestAlternativeForBlock } from '@/lib/planner';
+import { assignWellnessTips, getDailyWellnessSummary } from '@/lib/wellness';
 import { Timeline } from '@/components/TimeBlockCard';
 import { RadioOption } from '@/components/OnboardingStep';
 import { NotificationModal } from '@/components/NotificationModal';
@@ -59,8 +60,9 @@ export default function Home() {
     if (!profile) return;
     
     if (savedPlan && !isPlanLoading) {
-      // 저장된 계획이 있으면 불러오기
-      setTimeBlocks(savedPlan.timeBlocks || []);
+      // 저장된 계획이 있으면 불러오기 (웰니스 팁 재할당)
+      const blocksWithTips = assignWellnessTips(savedPlan.timeBlocks || []);
+      setTimeBlocks(blocksWithTips);
       setCondition(savedPlan.condition || 'normal');
       setMenstrualCondition(savedPlan.menstrualCondition || 'normal');
       setNotes(savedPlan.notes || '');
@@ -68,7 +70,8 @@ export default function Home() {
     } else if (!savedPlan && !isPlanLoading) {
       // 저장된 계획이 없으면 프로필 기반 새 블록 생성
       const blocks = generateTimeBlocks(profile);
-      setTimeBlocks(blocks);
+      const blocksWithTips = assignWellnessTips(blocks);
+      setTimeBlocks(blocksWithTips);
       setCondition('normal');
       setMenstrualCondition('normal');
       setNotes('');
@@ -264,6 +267,12 @@ export default function Home() {
     weekday: 'long',
   });
 
+  // 웰니스 요약
+  const wellnessSummary = getDailyWellnessSummary(
+    condition,
+    showMenstrualOption ? menstrualCondition : undefined,
+  );
+
   // 선택된 날짜가 운동 날인지 확인
   const isExerciseDay = profile.exercise.active && 
     (!profile.exercise.days || profile.exercise.days.length === 0 || 
@@ -369,6 +378,21 @@ export default function Home() {
           </div>
         )}
       </section>
+
+      {/* 오늘의 웰니스 */}
+      {wellnessSummary.conditionTip && (
+        <section className="rounded-xl border border-purple-200 dark:border-purple-800 bg-purple-50 dark:bg-purple-950/20 p-4">
+          <h2 className="text-sm font-semibold text-purple-700 dark:text-purple-400 mb-2">🌿 오늘의 웰니스</h2>
+          <p className="text-sm text-purple-600 dark:text-purple-300">
+            {wellnessSummary.conditionTip}
+          </p>
+          {wellnessSummary.menstrualTip && (
+            <p className="text-sm text-purple-600 dark:text-purple-300 mt-2 pt-2 border-t border-purple-200 dark:border-purple-800">
+              {wellnessSummary.menstrualTip}
+            </p>
+          )}
+        </section>
+      )}
 
       {/* 운동 날 알림 */}
       {isExerciseDay && (

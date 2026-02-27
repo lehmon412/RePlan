@@ -29,6 +29,8 @@ export interface TimeBlock {
   // 운동 블록 전용
   exerciseType?: string;
   exercisePlan?: string;
+  // 웰니스 팁
+  wellnessTip?: string;
 }
 
 // 일일 계획

@@ -31,15 +31,24 @@ export function TimeBlockCard({ block, onChange, exerciseTypes }: TimeBlockCardP
   // 고정 일정 (식사, 출퇴근, 취침 등)
   if (block.isFixed && block.blockType !== 'exercise') {
     return (
-      <div className="flex items-center gap-3 py-2 px-3 rounded-lg bg-[var(--card)] border border-[var(--border)]/50">
-        <div className="text-xl">{block.icon}</div>
-        <div className="flex-1">
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-[var(--muted)]">{block.startTime}</span>
-            <span className="font-medium text-sm">{block.label}</span>
+      <div className="rounded-lg bg-[var(--card)] border border-[var(--border)]/50">
+        <div className="flex items-center gap-3 py-2 px-3">
+          <div className="text-xl">{block.icon}</div>
+          <div className="flex-1">
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-[var(--muted)]">{block.startTime}</span>
+              <span className="font-medium text-sm">{block.label}</span>
+            </div>
           </div>
+          <span className="text-xs text-[var(--muted)]">{formatDuration(availableMinutes)}</span>
         </div>
-        <span className="text-xs text-[var(--muted)]">{formatDuration(availableMinutes)}</span>
+        {block.wellnessTip && (
+          <div className="px-3 pb-2">
+            <span className="inline-block text-xs text-teal-600 dark:text-teal-400 bg-teal-50 dark:bg-teal-950/30 px-2 py-1 rounded-full">
+              {block.wellnessTip}
+            </span>
+          </div>
+        )}
       </div>
     );
   }
@@ -78,6 +87,15 @@ export function TimeBlockCard({ block, onChange, exerciseTypes }: TimeBlockCardP
           {formatDuration(availableMinutes)}
         </div>
       </div>
+
+      {/* 웰니스 팁 (접이식) */}
+      {block.wellnessTip && (
+        <div className="px-4 py-2 bg-teal-50/50 dark:bg-teal-950/10 border-b border-teal-100 dark:border-teal-900/30">
+          <p className="text-xs text-teal-600 dark:text-teal-400">
+            {block.wellnessTip}
+          </p>
+        </div>
+      )}
 
       {/* 본문 */}
       <div className="p-4">
