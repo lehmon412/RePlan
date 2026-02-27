@@ -170,8 +170,12 @@ export default function OnboardingPage() {
           nap: nap.enabled ? nap : undefined,
         },
       };
-      await saveProfile(profile);
-      router.push('/');
+      const success = await saveProfile(profile);
+      if (success) {
+        router.push('/');
+      } else {
+        alert('프로필 저장에 실패했습니다. 다시 시도해주세요.');
+      }
     }
   };
 

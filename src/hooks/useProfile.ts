@@ -22,18 +22,23 @@ export function useProfile() {
     async function loadProfile() {
       if (sessionStatus === 'loading') return;
       
+      let loaded = false;
+
       // Supabase 연결 시 서버에서 로드
       if (sessionStatus === 'authenticated' && session?.user?.email && isSupabaseConfigured()) {
         try {
           const data = await getProfile(session.user.email);
           if (data) {
             setProfile(data as UserProfile);
+            loaded = true;
           }
         } catch (error) {
           console.error('Failed to load profile from server:', error);
         }
-      } else {
-        // Supabase 미연결 시 localStorage에서 로드
+      }
+      
+      // Supabase에서 못 불러왔으면 localStorage에서 로드
+      if (!loaded) {
         const stored = localStorage.getItem(PROFILE_STORAGE_KEY);
         if (stored) {
           try {
@@ -55,9 +60,15 @@ export function useProfile() {
     if (session?.user?.email && isSupabaseConfigured()) {
       const success = await saveProfileToDb(session.user.email, newProfile);
       if (success) {
+        // Supabase 저장 성공 → localStorage에도 백업
+        try {
+          localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(newProfile));
+        } catch { /* ignore */ }
         setProfile(newProfile);
+        return true;
       }
-      return success;
+      // Supabase 저장 실패 → localStorage로 폴백
+      console.warn('Supabase save failed, falling back to localStorage');
     }
     
     // 폴백: localStorage에 저장
