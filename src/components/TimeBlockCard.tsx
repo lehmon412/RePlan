@@ -3,7 +3,7 @@
 import type { TimeBlock, TodoItem } from '@/types/profile';
 import { EXERCISE_TYPE_OPTIONS } from '@/types/profile';
 import { TodoInput, formatDuration } from './TodoInput';
-import { getBlockAvailableMinutes, getTotalTodoDuration, isTimeOverflow } from '@/lib/templates';
+import { getBlockAvailableMinutes, isTimeOverflow } from '@/lib/templates';
 
 interface TimeBlockCardProps {
   block: TimeBlock;
@@ -12,7 +12,6 @@ interface TimeBlockCardProps {
 }
 
 export function TimeBlockCard({ block, onChange, exerciseTypes }: TimeBlockCardProps) {
-  const isInput = !block.isFixed;
   const isExercise = block.blockType === 'exercise';
   const availableMinutes = getBlockAvailableMinutes(block);
   const overflow = isTimeOverflow(block);

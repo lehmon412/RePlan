@@ -11,18 +11,14 @@ import {
 import {
   TimePicker,
   CommuteDurationPicker,
-  ToggleGroup,
   MealTimeInput,
-  Select,
 } from '@/components/FormInputs';
 import {
   UserProfile,
   LifestyleType,
-  ShiftType,
   Weekday,
   GENDER_OPTIONS,
   LIFESTYLE_OPTIONS,
-  SHIFT_TYPE_OPTIONS,
   WEEKDAY_OPTIONS,
   WEEKLY_EXERCISE_COUNT_OPTIONS,
   EXERCISE_TYPE_OPTIONS,
@@ -31,7 +27,7 @@ import {
 
 export default function SettingsPage() {
   const router = useRouter();
-  const { data: session, status: sessionStatus } = useSession();
+  const { status: sessionStatus } = useSession();
   const { profile, isLoading, saveProfile } = useProfile();
   const [isSaving, setIsSaving] = useState(false);
   const [activeSection, setActiveSection] = useState<string | null>(null);
@@ -188,11 +184,22 @@ export default function SettingsPage() {
             {gender === 'female' && (
               <div>
                 <label className="label">생리 주기 추적</label>
-                <ToggleGroup
-                  options={[{ label: '예', value: true }, { label: '아니오', value: false }]}
-                  selectedValue={trackMenstrual}
-                  onSelect={setTrackMenstrual}
-                />
+                <div className="flex gap-2">
+                  {[{ label: '예', value: true }, { label: '아니오', value: false }].map((opt) => (
+                    <button
+                      key={String(opt.value)}
+                      type="button"
+                      onClick={() => setTrackMenstrual(opt.value)}
+                      className={`flex-1 py-2 rounded-lg border text-sm transition-colors ${
+                        trackMenstrual === opt.value
+                          ? 'border-[var(--primary)] text-[var(--primary)] bg-[var(--primary)]/10'
+                          : 'border-[var(--border)]'
+                      }`}
+                    >
+                      {opt.label}
+                    </button>
+                  ))}
+                </div>
               </div>
             )}
           </div>
@@ -229,10 +236,10 @@ export default function SettingsPage() {
             {(lifestyleType === 'office' || lifestyleType === 'office_flex') && (
               <>
                 <div className="grid grid-cols-2 gap-4">
-                  <TimePicker label="출근 시간" selectedTime={officeStart} onSelectTime={setOfficeStart} />
-                  <TimePicker label="퇴근 시간" selectedTime={officeEnd} onSelectTime={setOfficeEnd} />
+                  <TimePicker label="출근 시간" value={officeStart} onChange={setOfficeStart} />
+                  <TimePicker label="퇴근 시간" value={officeEnd} onChange={setOfficeEnd} />
                 </div>
-                <TimePicker label="점심 시간" selectedTime={lunchTime} onSelectTime={setLunchTime} />
+                <TimePicker label="점심 시간" value={lunchTime} onChange={setLunchTime} />
                 <CommuteDurationPicker value={commuteMinutes} onChange={setCommuteMinutes} />
               </>
             )}
@@ -252,8 +259,8 @@ export default function SettingsPage() {
         
         {activeSection === 'sleep' && (
           <div className="mt-4 grid grid-cols-2 gap-4">
-            <TimePicker label="기상 시간" selectedTime={wakeTime} onSelectTime={setWakeTime} />
-            <TimePicker label="취침 시간" selectedTime={bedTime} onSelectTime={setBedTime} />
+            <TimePicker label="기상 시간" value={wakeTime} onChange={setWakeTime} />
+            <TimePicker label="취침 시간" value={bedTime} onChange={setBedTime} />
           </div>
         )}
       </section>
@@ -309,11 +316,22 @@ export default function SettingsPage() {
           <div className="mt-4 space-y-4">
             <div>
               <label className="label">운동 여부</label>
-              <ToggleGroup
-                options={[{ label: '예', value: true }, { label: '아니오', value: false }]}
-                selectedValue={exerciseActive}
-                onSelect={setExerciseActive}
-              />
+              <div className="flex gap-2">
+                {[{ label: '예', value: true }, { label: '아니오', value: false }].map((opt) => (
+                  <button
+                    key={String(opt.value)}
+                    type="button"
+                    onClick={() => setExerciseActive(opt.value)}
+                    className={`flex-1 py-2 rounded-lg border text-sm transition-colors ${
+                      exerciseActive === opt.value
+                        ? 'border-[var(--primary)] text-[var(--primary)] bg-[var(--primary)]/10'
+                        : 'border-[var(--border)]'
+                    }`}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
             </div>
 
             {exerciseActive && (
@@ -362,7 +380,7 @@ export default function SettingsPage() {
                   </div>
                 </div>
 
-                <TimePicker label="운동 시간" selectedTime={exerciseTime} onSelectTime={setExerciseTime} />
+                <TimePicker label="운동 시간" value={exerciseTime} onChange={setExerciseTime} />
 
                 <div>
                   <label className="label">운동 종류</label>

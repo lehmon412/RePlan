@@ -81,7 +81,7 @@ export function NotificationModal({
           
           {block.todos.length > 0 ? (
             <ul className="space-y-2">
-              {block.todos.map((todo, index) => (
+              {block.todos.map((todo) => (
                 <li 
                   key={todo.id} 
                   className="flex items-center gap-3 p-3 rounded-lg bg-[var(--background)] border border-[var(--border)]"

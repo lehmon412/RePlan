@@ -38,7 +38,7 @@ const TOTAL_STEPS = 8;
 
 export default function OnboardingPage() {
   const router = useRouter();
-  const { data: session, status: sessionStatus } = useSession();
+  const { status: sessionStatus } = useSession();
   const { saveProfile } = useProfile();
   const [step, setStep] = useState(1);
 
@@ -88,7 +88,7 @@ export default function OnboardingPage() {
   const [exerciseTypes, setExerciseTypes] = useState<string[]>([]);
 
   // Step 7: 기타 루틴
-  const [caffeine, setCaffeine] = useState({ enabled: false, time: '09:00' });
+  const [caffeine] = useState({ enabled: false, time: '09:00' });
   const [nap, setNap] = useState({ enabled: false, time: '13:00', duration: 30 });
   const [morningBreak, setMorningBreak] = useState({ enabled: false, time: '10:30', duration: 15 });
   const [afternoonBreak, setAfternoonBreak] = useState({ enabled: false, time: '15:00', duration: 15 });

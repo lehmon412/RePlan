@@ -1,13 +1,13 @@
 'use client';
 
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession, signOut } from 'next-auth/react';
 import Image from 'next/image';
 import { useProfile } from '@/hooks/useProfile';
 import { useNotification } from '@/hooks/useNotification';
 import { useDailyPlan } from '@/hooks/useDailyPlan';
-import { usePlanTimer, NOTIFY_TIMING_OPTIONS, type TimerSettings, type NotifyTiming } from '@/hooks/usePlanTimer';
+import { usePlanTimer, NOTIFY_TIMING_OPTIONS, type TimerSettings } from '@/hooks/usePlanTimer';
 import { generateTimeBlocks, CONDITION_OPTIONS, MENSTRUAL_OPTIONS } from '@/lib/templates';
 import { autoAssignTodosToBlocks, suggestAlternativeForBlock } from '@/lib/planner';
 import { Timeline } from '@/components/TimeBlockCard';
@@ -108,7 +108,7 @@ export default function Home() {
   }, [sendNotification]);
 
   // 타이머 훅
-  const { activeTimers, getNextNotification } = usePlanTimer({
+  const { activeTimers } = usePlanTimer({
     timeBlocks,
     settings: timerSettings,
     onNotify: handleNotify,
@@ -267,7 +267,7 @@ export default function Home() {
   // 선택된 날짜가 운동 날인지 확인
   const isExerciseDay = profile.exercise.active && 
     (!profile.exercise.days || profile.exercise.days.length === 0 || 
-     profile.exercise.days.includes(['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'][selectedDate.getDay()] as any));
+     profile.exercise.days.includes((['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'] as const)[selectedDate.getDay()]));
 
   return (
     <div className="flex flex-col gap-6 animate-fadeIn">

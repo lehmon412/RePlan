@@ -1,4 +1,4 @@
-import type { UserProfile, TimeBlock, TodoItem, isExerciseDay as isExerciseDayFn } from '@/types/profile';
+import type { UserProfile, TimeBlock, TodoItem } from '@/types/profile';
 import { getTodayWeekday } from '@/types/profile';
 
 // 시간 문자열을 분으로 변환

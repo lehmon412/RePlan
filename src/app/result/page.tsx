@@ -3,7 +3,7 @@
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useMemo, Suspense } from 'react';
 import Link from 'next/link';
-import type { DailyPlan, TimeBlock } from '@/types/profile';
+import type { DailyPlan } from '@/types/profile';
 import { EXERCISE_TYPE_OPTIONS } from '@/types/profile';
 import { formatDuration } from '@/components/TodoInput';
 
@@ -54,11 +54,6 @@ function ResultContent() {
   const getExerciseTypeLabel = (type: string) => {
     return EXERCISE_TYPE_OPTIONS.find(t => t.value === type)?.label || type;
   };
-
-  // 입력된 할 일이 있는 블록만 필터링
-  const blocksWithTodos = planData.timeBlocks.filter(
-    block => block.todos.some(t => t.text.trim()) || block.exercisePlan?.trim()
-  );
 
   // 전체 할 일 목록
   const allTodos = planData.timeBlocks.flatMap(block => 
