@@ -558,6 +558,25 @@ export default function Home() {
                 ⏱️ {activeTimers.length}개의 알림이 예약되었습니다.
               </p>
             )}
+
+            {/* 알림 미리보기 버튼 */}
+            <button
+              onClick={() => {
+                // 할 일이 있는 블록 중 첫 번째를 선택, 없으면 첫 비고정 블록
+                const previewBlock = timeBlocks.find(b => !b.isFixed && b.todos.some(t => t.text.trim()))
+                  || timeBlocks.find(b => !b.isFixed)
+                  || timeBlocks[0];
+                if (previewBlock) {
+                  setNotificationBlock(previewBlock);
+                  setIsModalOpen(true);
+                  setAlternativePlan(null);
+                }
+              }}
+              className="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg border border-dashed border-[var(--primary)]/40 text-[var(--primary)] text-sm hover:bg-[var(--primary)]/5 transition-colors"
+            >
+              <span>👀</span>
+              <span>알림 미리보기</span>
+            </button>
           </div>
         )}
       </section>
